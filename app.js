@@ -1,28 +1,38 @@
 const express = require('express');
 const app = express();
-//const HealthCheck = require('./models/healthCheck');
+const HealthCheck = require('./models/healthCheck');
+const sequelize = require('./config/db');
 const port = process.env.PORT || 8080;
 app.listen(port)
 app.use(express.json());
-app.get('/healthz', async (req, res) => {
-    try {
-      //await HealthCheck.create({});
-  
-      res.set('Cache-Control', 'no-cache, no-store');
-      res.status(200).json();
-    } catch (err) {
-      console.error('Database insert failed:', err);
-      res.status(503).send('Service Unavailable');
-    }
-  });
-app.all('/healthz', (req, res) => {
-    res.status(405).send('Method Not Allowed');
-});
 app.use('/healthz', (req, res, next) => {
-    if (req.body || req.query) {
-      return res.status(400).send('Bad Request');
-    }
+    if (Object.keys(req.query).length>0) {
+       return res.status(400).json();
+     }
+     if(Object.keys(req.body).length>0){
+        return res.status(400).json()
+     }
+     req.on("data", function(){
+        return res.status(400).json()
+     })
     next();
 });
-  
-  
+app.get('/healthz', async (req, res) => {
+    try {
+        res.set("Pragma", "no-cache");
+      res.set("X-Content-Type-Options", "nosniff");      
+      res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
+    await sequelize.authenticate()
+      await HealthCheck.create({});
+      
+      res.status(200).json();
+    } catch (err) {
+        res.set("Pragma", "no-cache");
+        res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
+        res.set("X-Content-Type-Options", "nosniff");      
+        res.status(503).json();
+    }
+  });
+app.all('/healthz', (req, res) => { 
+    res.status(405).json();
+});
