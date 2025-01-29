@@ -12,7 +12,7 @@
 4. Run `node app.js` to start the server.
 5. We can use `net stop MySQL92` and `net start MySQL92` to stop and start mysql server 
 
-## API Endpoints
+## API Endpoint
 `GET / localhost:8080/healthz`
 Responses: 
 1. 200 OK: Database is connected and working

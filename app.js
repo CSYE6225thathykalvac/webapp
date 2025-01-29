@@ -17,6 +17,9 @@ app.use('/healthz', (req, res, next) => {
      })
     next();
 });
+app.head('/healthz', (req, res) => {
+    res.status(405).json();
+});
 app.get('/healthz', async (req, res) => {
     try {
         res.set("Pragma", "no-cache");
@@ -30,6 +33,7 @@ app.get('/healthz', async (req, res) => {
         res.status(503).json();
     }
   });
+
 app.all('/healthz', (req, res) => { 
     res.status(405).json();
 });
