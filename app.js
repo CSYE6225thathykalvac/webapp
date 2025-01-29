@@ -27,9 +27,6 @@ app.get('/healthz', async (req, res) => {
       
       res.status(200).json();
     } catch (err) {
-        res.set("Pragma", "no-cache");
-        res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
-        res.set("X-Content-Type-Options", "nosniff");      
         res.status(503).json();
     }
   });
