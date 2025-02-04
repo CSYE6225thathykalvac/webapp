@@ -37,3 +37,6 @@ app.get('/healthz', async (req, res) => {
 app.all('/healthz', (req, res) => { 
     res.status(405).json();
 });
+app.use((req, res) => {
+  res.status(400).json();
+});
