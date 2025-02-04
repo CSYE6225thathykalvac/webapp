@@ -3,7 +3,7 @@ const app = express();
 const HealthCheck = require('./models/healthCheck');
 const sequelize = require('./config/db');
 const port = process.env.PORT || 8080;
-app.listen(port)
+const port_listen = app.listen(port)
 app.use(express.json());
 app.use('/healthz', (req, res, next) => {
     if (Object.keys(req.query).length>0) {
@@ -40,3 +40,4 @@ app.all('/healthz', (req, res) => {
 app.use((req, res) => {
   res.status(400).json();
 });
+module.exports = {app:app, port_listen:port_listen};
