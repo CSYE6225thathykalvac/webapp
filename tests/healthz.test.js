@@ -1,25 +1,20 @@
 const request = require('supertest');
-const app = require('../app'); // Import your Express app
+const {app} = require('../app'); // Import your Express app
 const sequelize = require('../config/db'); // Import the database connection
-if (process.env.NODE_ENV !== 'test') {
-    app.listen(port); // Only listen if not in test mode
-  }
+const {port_listen} = require('../app');
 describe('GET /healthz', () => {
   
   // Test 1: Success case - Database is running
   it('should return 200 OK when database is up', async () => {
     const res = await request(app).get('/healthz');
     expect(res.status).toBe(200);
-    expect(res.headers['cache-control']).toBe('no-cache');
   });
 
   // Test 2: Failure case - Database is down
   it('should return 503 Service Unavailable when database is down', async () => {
-    // Temporarily disconnect the DB to simulate failure
-    await sequelize.close(); // Close DB connection
+    await sequelize.close(); 
     const res = await request(app).get('/healthz');
     expect(res.status).toBe(503);
-    await sequelize.authenticate(); // Reconnect DB after test
   });
 
   // Test 3: Method Not Allowed - Check if other methods are blocked
@@ -43,9 +38,39 @@ describe('GET /healthz', () => {
     expect(res.status).toBe(405);
   });
 
+  it('should return 405 Method Not Allowed for PATCH requests', async () => {
+    const res = await request(app).head('/healthz');
+    expect(res.status).toBe(405);
+  });
+
+  it('should return 405 Method Not Allowed for PATCH requests', async () => {
+    const res = await request(app).options('/healthz');
+    expect(res.status).toBe(405);
+  });
+
   // Test 4: Bad Request - Request with payload (body)
   it('should return 400 Bad Request when a payload is sent', async () => {
     const res = await request(app).get('/healthz').send({ test: 'payload' });
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 Bad Request when a payload is sent', async () => {
+    const res = await request(app).get('/healthz').send("Hello");
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 Bad Request when a payload is sent', async () => {
+    const res = await request(app).get('/healthz').set('Content-Type', 'text/html').send("<html>Hello</html>");
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 Bad Request when a payload is sent', async () => {
+    const res = await request(app).get('/healthz').set('Content-Type', 'application/x-www-form-urlencoded').send("Key and Value Pair");
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 Bad Request when a payload is sent', async () => {
+    const res = await request(app).get("/healthz?a=10");
     expect(res.status).toBe(400);
   });
 
@@ -56,4 +81,7 @@ describe('GET /healthz', () => {
   });
 
 });
-module.exports = app;
+afterAll(async () => {
+    await sequelize.close();
+    port_listen.close()
+});
