@@ -4,6 +4,7 @@
 - Node.js
 - MySQL Database
 - .env file with required DB credentials
+- digital ocean account
 
 ## Build & Deploy Instructions
 1. Clone the repository.
@@ -31,7 +32,7 @@ Responses:
 1. create account in `digitalocean` and connect using `ssh`
 2. create a `droplet` in digital ocean
 3. use `ssh -i C:\Users\charan\.ssh\do root@public_ip`to connect local command shell with droplet
-4. upload zip folder to `csye6225` using `scp -i ~/.ssh/do ~/Downloads/webapp.zip root@165.227.86.188:/opt/csye6225/` in git bash
+4. upload zip folder to `csye6225` using `scp -i ~/.ssh/do ~/Downloads/webapp.zip root@public_ip:/opt/csye6225/` in git bash
 5. create 2 files namely `setup.sh` and `.env`
 6. write the automation commands in setup.sh
 7. we can execute the files using `bash setup.sh` or `.\setup.sh` 
