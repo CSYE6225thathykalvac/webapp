@@ -2,6 +2,8 @@ const request = require('supertest');
 const {app} = require('../app'); 
 const sequelize = require('../config/db');
 const {port_listen} = require('../app');
+beforeAll(async() => {
+  await sequelize.authenticate()})
 describe('GET /healthz', () => {
   
   it('should return 200 OK when database is up', async () => {
