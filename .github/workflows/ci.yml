@@ -50,5 +50,14 @@ jobs:
           echo "MySQL did not start in time" >&2
           exit 1
 
+      - name: Debug MySQL Logs
+        run: docker logs $(docker ps -q --filter ancestor=mysql:8.0)
+
       - name: Run Tests
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
         run: npx jest
