@@ -14,7 +14,7 @@ describe('GET /healthz', () => {
   it('should return 503 Service Unavailable when database is down', async () => {
     await sequelize.close(); 
     const res = await request(app).get('/healthz');
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(503);
   });
 
   it('should return 405 Method Not Allowed for POST requests', async () => {
