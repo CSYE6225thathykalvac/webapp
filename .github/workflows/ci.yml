@@ -50,8 +50,5 @@ jobs:
           echo "MySQL did not start in time" >&2
           exit 1
 
-      - name: Run Database Migrations (if applicable)
-        run: npm run migrate # Update this if you have a migration command
-
       - name: Run Tests
-        run: npm test
+        run: npx jest
