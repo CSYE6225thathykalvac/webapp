@@ -42,3 +42,16 @@ Responses:
 2. we have to install modules such as `jest` and `supertest` using `npm install`
 3. write test cases for `200 OK`, `405 Method Not Allowed`, `400 Bad Request` and `503 Service Unavailable`
 4. we can run the test cases using `npx jest` command
+
+# webapp- Assignment 3 CI
+- The workflow runs automatically on every **pull request** to the `main` branch.
+## Build and Test
+- **Runs on:** `ubuntu-latest`
+- **Services:**
+  - **MySQL (v8.0)** is started as a service container with credentials stored in **GitHub Secrets**.
+## Steps:
+1. **Checkout Code**: Fetches the latest code from the repository.
+2. **Set Up Node.js**: Installs Node.js version 18.
+3. **Install Dependencies**: Runs `npm install` to install project dependencies.
+4. **Wait for MySQL**: Ensures the MySQL service is ready before running tests.
+5. **Run Tests**: Executes Jest tests using the provided database credentials.
