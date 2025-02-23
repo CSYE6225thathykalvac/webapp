@@ -1,0 +1,39 @@
+name: Packer CI
+
+on:
+  pull_request:
+    branches:
+      - main  
+jobs:
+  packer-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Packer
+      uses: hashicorp/setup-packer@main
+
+    - name: Run Packer fmt
+      run: |
+        packer fmt -check .
+      continue-on-error: false
+      id: packer-fmt
+
+    - name: Run Packer validate
+      run: |
+        packer validate .
+      continue-on-error: false
+      id: packer-validate
+
+    - name: Fail workflow if fmt or validate failed
+      run: |
+        if [[ "${{ steps.packer-fmt.outcome }}" == "failure" ]]; then
+          echo "Packer fmt failed. Please format the template before merging.";
+          exit 1;
+        fi
+        if [[ "${{ steps.packer-validate.outcome }}" == "failure" ]]; then
+          echo "Packer validate failed. Please fix the template before merging.";
+          exit 1;
+        fi
