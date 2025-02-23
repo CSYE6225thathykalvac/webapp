@@ -1,0 +1,61 @@
+name: Building AMI
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build:
+    name: Building Machine Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@main
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y unzip jq
+
+      - name: Building Application Artifact
+        run: |
+          mkdir -p build
+          zip -r build/webapp.zip ./*
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-artifact
+          path: build/webapp.zip
+
+      - name: Setting Environment Variables
+        run: |
+          echo "DATABASE_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DATABASE_USERNAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DATABASE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DATABASE_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DATABASE_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          cat .env
+
+      - name: Packer Initialization
+        working-directory: src/infra
+        run: packer init .
+
+      - name: Validate Packer Template
+        working-directory: src/infra
+        run: packer validate .
+
+      - name: Building Image
+        working-directory: src/infra
+        run: packer build .
