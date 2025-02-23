@@ -45,8 +45,8 @@ build {
       # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-common",
       # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-client-8.0 mysql-server-8.0",
       # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
-      # "sudo useradd -r -s /usr/sbin/nologin csye6225",
-      # "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/app"
+      "sudo useradd -r -s /usr/sbin/nologin csye6225",
+      "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/app"
     ]
   }
 }
