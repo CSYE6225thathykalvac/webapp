@@ -1,4 +1,4 @@
-name: Building AMI
+name: Building machine image
 
 on:
   push:
@@ -20,6 +20,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+      - name: Debug AWS Region Secret
+        run: echo "AWS_REGION is set to '${{ secrets.AWS_REGION }}'"
 
       - name: Install Packer
         uses: hashicorp/setup-packer@main
@@ -49,7 +51,7 @@ jobs:
           cat .env
 
       - name: Packer Initialization
-        working-directory: src/infra
+        working-directory: 
         run: packer init .
 
       - name: Validate Packer Template
