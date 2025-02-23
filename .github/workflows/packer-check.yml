@@ -15,13 +15,19 @@ jobs:
     - name: Set up Packer
       uses: hashicorp/setup-packer@main
 
+    - name: Run Initialization
+      working-directory: packer_script
+      run: packer init .
+
     - name: Run Packer fmt
+      working-directory: packer_script
       run: |
         packer fmt -check .
       continue-on-error: false
       id: packer-fmt
 
     - name: Run Packer validate
+      working-directory: packer_script
       run: |
         packer validate .
       continue-on-error: false
