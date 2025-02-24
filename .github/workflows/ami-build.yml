@@ -38,14 +38,19 @@ jobs:
         run: |
           mkdir -p build
           zip -r build/webapp.zip ./*
+          ls -l build/webapp.zip
 
       - name: Copy Artifact to AMI Directory
         run: |
+          mkdir -p ami
           cp build/webapp.zip ami/webapp.zip
+          ls -l ami/webapp.zip
 
       - name: Packer Initialization
         working-directory: ami
-        run: packer init .
+        run: | 
+          ls -l
+          packer init .
 
       - name: Validate Packer Template
         working-directory: ami
