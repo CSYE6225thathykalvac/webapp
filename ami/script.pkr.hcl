@@ -53,13 +53,16 @@ build {
       "sudo apt-get update -y && sudo apt-get upgrade -y || true",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
       # Secure MySQL Installation using Packer variables
-      "sudo mysql --user=root <<EOF
+      <<-EOF
+      sudo mysql --user=root <<MYSQL_SCRIPT
       ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
       CREATE DATABASE IF NOT EXISTS ${var.db_name};
-      CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
+      CREATE USER IF NOT EXISTS '${var.db_user}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
       GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'localhost';
       FLUSH PRIVILEGES;
-      EOF"
+      MYSQL_SCRIPT
+      EOF
+      ,
       "sudo systemctl restart mysql",
       "sudo useradd -r -s /usr/sbin/nologin csye6225",
       "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/app"
