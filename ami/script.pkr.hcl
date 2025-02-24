@@ -64,9 +64,12 @@ build {
       EOF
       ,
       "sudo systemctl restart mysql",
-      "sudo useradd -r -s /usr/sbin/nologin csye6225",
+      "sudo groupadd csye6225",
+      "sudo useradd -r -s /usr/sbin/nologin -g csye6225 csye6225",
+
+      # Create the application directory and set ownership
       "sudo mkdir -p /opt/csye6225",
-      "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/csye6225",
+      "sudo chown csye6225:csye6225 /opt/csye6225",
       "sudo chmod 755 /opt/csye6225"
     ]
   }
@@ -75,6 +78,12 @@ build {
     source      = "webapp.zip"
     destination = "/opt/csye6225/webapp.zip"
   }
+
+  # # Copy configuration files to the AMI
+  # provisioner "file" {
+  #   source      = "config/"
+  #   destination = "/opt/csye6225/config/"
+  # }
 
   # Ensure the artifact is owned by the csye6225 user
   provisioner "shell" {
