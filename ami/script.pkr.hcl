@@ -66,7 +66,8 @@ build {
       "sudo systemctl restart mysql",
       "sudo useradd -r -s /usr/sbin/nologin csye6225",
       "sudo mkdir -p /opt/csye6225",
-      "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/csye6225"
+      "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/csye6225",
+      "sudo chmod 755 /opt/csye6225"
     ]
   }
   # Copy the application artifact to the AMI
