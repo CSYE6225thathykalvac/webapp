@@ -82,18 +82,12 @@ build {
   # Copy the application artifact to the AMI
   provisioner "file" {
     source      = "webapp.zip"
-    destination = "/opt/csye6225/webapp.zip"
+    destination = "/tmp/webapp.zip"
   }
 
-  # # Copy configuration files to the AMI
-  # provisioner "file" {
-  #   source      = "config/"
-  #   destination = "/opt/csye6225/config/"
-  # }
-
-  # Ensure the artifact is owned by the csye6225 user
   provisioner "shell" {
     inline = [
+      "sudo mv /tmp/webapp.zip /opt/csye6225/webapp.zip",
       "sudo chown csye6225:csye6225 /opt/csye6225/webapp.zip"
     ]
   }
