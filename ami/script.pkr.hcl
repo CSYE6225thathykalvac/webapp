@@ -6,6 +6,10 @@ packer {
     }
   }
 }
+# Define Packer variables
+variable "db_name" {}
+variable "db_user" {}
+variable "db_password" {}
 
 source "amazon-ebs" "ubuntu" {
   ami_name      = "packer-linux-aws"
@@ -41,10 +45,13 @@ build {
       "sudo DEBIAN_FRONTEND=noninteractive apt-get update --fix-missing",
       "sudo apt-get update -y && sudo apt-get upgrade -y || true",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
-      # "sudo apt-get update && sudo apt-get upgrade -y",
-      # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-common",
-      # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-client-8.0 mysql-server-8.0",
-      # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
+      # Secure MySQL Installation using Packer variables
+      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';\"",
+      "sudo mysql -e \"CREATE DATABASE ${var.db_name};\"",
+      "sudo mysql -e \"CREATE USER '${var.db_user}'@'%' IDENTIFIED BY '${var.db_password}';\"",
+      "sudo mysql -e \"GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'%';\"",
+      "sudo mysql -e \"FLUSH PRIVILEGES;\"",
+      "sudo systemctl restart mysql",
       "sudo useradd -r -s /usr/sbin/nologin csye6225",
       "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/app"
     ]
