@@ -19,7 +19,7 @@ jobs:
         with: 
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Debug AWS Region Secret
         run: echo "AWS_REGION is set to '${{ secrets.AWS_REGION }}'"
 
@@ -58,6 +58,10 @@ jobs:
         working-directory: ami
         run: packer validate .
 
-      - name: Building Image
-        working-directory: ami
+      - name: Build AMI with Packer
+        working-directory: src/infra
+        env:
+          PACKER_DB_NAME: ${{ secrets.DB_NAME }}
+          PACKER_DB_USER: ${{ secrets.DB_USER }}
+          PACKER_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: packer build .
