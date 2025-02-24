@@ -106,10 +106,9 @@ build {
   }
   provisioner "shell" {
     inline = [
-      "sudo -u csye6225 mkdir -p /opt/csye6225/.npm",
-      "sudo -u csye6225 npm config set cache /opt/csye6225/.npm",
       "cd /opt/csye6225/",
-      "sudo -u csye6225 npm ci"
+      "sudo npm install",
+      "sudo chown -r -R csye6225:csye6225 node_modules"
     ]
   }
   provisioner "shell" {
