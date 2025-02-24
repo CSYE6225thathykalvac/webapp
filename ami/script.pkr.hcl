@@ -111,6 +111,19 @@ build {
       "sudo chown -R csye6225:csye6225 node_modules"
     ]
   }
+  provisioner "file" {
+    source      = ".env"
+    destination = "/opt/csye6225/.env"
+  }
+
+  # Ensure the .env file is owned by csye6225
+  provisioner "shell" {
+    inline = [
+      "sudo chown csye6225:csye6225 /opt/csye6225/.env"
+    ]
+  }
+
+  # Verify the .env file
   provisioner "shell" {
     inline = [
       "ls -l /opt/csye6225/",  # Verify the contents of /opt/csye6225/
