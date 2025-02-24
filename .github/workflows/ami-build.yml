@@ -59,7 +59,7 @@ jobs:
         run: packer validate .
 
       - name: Build AMI with Packer
-        working-directory: src/infra
+        working-directory: ami
         env:
           PACKER_DB_NAME: ${{ secrets.DB_NAME }}
           PACKER_DB_USER: ${{ secrets.DB_USER }}
