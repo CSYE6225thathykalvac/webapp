@@ -113,4 +113,17 @@ build {
       "sudo chown -R csye6225:csye6225 /opt/csye6225/"
     ]
   }
+  provisioner "shell" {
+    inline = [
+      "cd /opt/csye6225/",
+      "sudo -u csye6225 npm install"
+    ]
+  }
+  provisioner "shell" {
+    inline = [
+      "ls -l /opt/csye6225/",  # Verify the contents of /opt/csye6225/
+      "cat /opt/csye6225/.env" # Verify the contents of the .env file
+    ]
+  }
+
 }
