@@ -19,7 +19,7 @@ jobs:
         with: 
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1
       - name: Debug AWS Region Secret
         run: echo "AWS_REGION is set to '${{ secrets.AWS_REGION }}'"
 
