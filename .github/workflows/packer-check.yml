@@ -15,6 +15,18 @@ jobs:
     - name: Set up Packer
       uses: hashicorp/setup-packer@main
 
+    - name: Build Application Artifact
+      run: |
+          mkdir -p build
+          zip -r build/webapp.zip ./*
+          ls -l build/webapp.zip # Debug: Verify the artifact is created
+
+    - name: Copy Artifact to AMI Directory
+      run: |
+          mkdir -p ami
+          cp build/webapp.zip ami/webapp.zip
+          ls -l ami/webapp.zip # Debug: Verify the artifact is copied
+
     - name: Run Initialization
       working-directory: ami
       run: packer init .
