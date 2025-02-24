@@ -120,10 +120,10 @@ build {
     ]
   }
   provisioner "shell" {
-  inline = [
-    "ls -l /opt/csye6225/", # Verify the contents of /opt/csye6225/
-    "cat /opt/csye6225/.env" # Verify the contents of the .env file
-  ]
-}
+    inline = [
+      "ls -l /opt/csye6225/",  # Verify the contents of /opt/csye6225/
+      "cat /opt/csye6225/.env" # Verify the contents of the .env file
+    ]
+  }
 
 }
