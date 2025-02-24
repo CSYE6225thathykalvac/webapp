@@ -91,4 +91,26 @@ build {
       "sudo chown csye6225:csye6225 /opt/csye6225/webapp.zip"
     ]
   }
+  provisioner "shell" {
+    inline = [
+      # Install unzip
+      "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y unzip",
+
+      # Install Node.js (using NodeSource setup script for the latest LTS version)
+      "curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -",
+      "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs",
+
+      # Verify Node.js and npm installation
+      "node -v",
+      "npm -v"
+    ]
+  }
+
+  # Extract the application artifact
+  provisioner "shell" {
+    inline = [
+      "sudo -u csye6225 unzip /opt/csye6225/webapp.zip -d /opt/csye6225/",
+      "sudo chown -R csye6225:csye6225 /opt/csye6225/"
+    ]
+  }
 }
