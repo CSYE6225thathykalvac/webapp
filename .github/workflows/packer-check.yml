@@ -16,18 +16,18 @@ jobs:
       uses: hashicorp/setup-packer@main
 
     - name: Run Initialization
-      working-directory: packer_script
+      working-directory: ami
       run: packer init .
 
     - name: Run Packer fmt
-      working-directory: packer_script
+      working-directory: ami
       run: |
         packer fmt -check .
       continue-on-error: false
       id: packer-fmt
 
     - name: Run Packer validate
-      working-directory: packer_script
+      working-directory: ami
       run: |
         packer validate .
       continue-on-error: false
