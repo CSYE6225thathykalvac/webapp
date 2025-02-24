@@ -39,12 +39,10 @@ jobs:
           mkdir -p build
           zip -r build/webapp.zip ./*
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: webapp-artifact
-          path: build/webapp.zip
-          
+      - name: Copy Artifact to AMI Directory
+        run: |
+          cp build/webapp.zip ami/webapp.zip
+
       - name: Packer Initialization
         working-directory: ami
         run: packer init .
