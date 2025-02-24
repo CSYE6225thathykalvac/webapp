@@ -78,7 +78,7 @@ build {
       "sudo chown ubuntu:ubuntu /opt/csye6225/"
     ]
   }
-  
+
   # Copy the application artifact to the AMI
   provisioner "file" {
     source      = "webapp.zip"
