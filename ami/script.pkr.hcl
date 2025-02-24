@@ -68,11 +68,17 @@ build {
       "sudo useradd -r -s /usr/sbin/nologin -g csye6225 csye6225",
 
       # Create the application directory and set ownership
-      "sudo mkdir -p /opt/csye6225",
-      "sudo chown csye6225:csye6225 /opt/csye6225",
-      "sudo chmod 755 /opt/csye6225"
+      "sudo mkdir -p /opt/csye6225/",
+      "sudo chown csye6225:csye6225 /opt/csye6225/",
+      "sudo chmod 755 /opt/csye6225/"
     ]
   }
+  provisioner "shell" {
+    inline = [
+      "sudo chown ubuntu:ubuntu /opt/csye6225/"
+    ]
+  }
+
   # Copy the application artifact to the AMI
   provisioner "file" {
     source      = "webapp.zip"
