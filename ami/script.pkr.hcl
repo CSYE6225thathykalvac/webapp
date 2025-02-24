@@ -116,7 +116,7 @@ build {
   provisioner "shell" {
     inline = [
       "cd /opt/csye6225/",
-      "sudo -u csye6225 npm install"
+      "sudo -u csye6225 npm ci"
     ]
   }
   provisioner "shell" {
