@@ -20,25 +20,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Debug AWS Region Secret
-        run: echo "AWS_REGION is set to '${{ secrets.AWS_REGION }}'"
 
       - name: Install Packer
         uses: hashicorp/setup-packer@main
-
-      - name: Install Dependencies
-        run: sudo apt-get update && sudo apt-get install -y unzip jq
-
-      - name: Building Application Artifact
-        run: |
-          mkdir -p build
-          zip -r build/webapp.zip ./*
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: application-artifact
-          path: build/webapp.zip
 
       - name: Setting Environment Variables
         run: |
@@ -49,7 +33,18 @@ jobs:
           echo "DATABASE_PORT=${{ secrets.DB_PORT }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
           cat .env
+     
+      - name: Build Application Artifact
+        run: |
+          mkdir -p build
+          zip -r build/webapp.zip ./*
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-artifact
+          path: build/webapp.zip
+          
       - name: Packer Initialization
         working-directory: ami
         run: packer init .

@@ -49,9 +49,6 @@ build {
 
   provisioner "shell" {
     inline = [
-      "echo 'DB_NAME: ${var.db_name}'",
-      "echo 'DB_USER: ${var.db_user}'",
-      "echo 'DB_PASSWORD: ${var.db_password}'",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get update --fix-missing",
       "sudo apt-get update -y && sudo apt-get upgrade -y || true",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
@@ -68,7 +65,19 @@ build {
       ,
       "sudo systemctl restart mysql",
       "sudo useradd -r -s /usr/sbin/nologin csye6225",
-      "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/app"
+      "sudo mkdir -p /opt/app && sudo chown csye6225:csye6225 /opt/csye6225"
+    ]
+  }
+  # Copy the application artifact to the AMI
+  provisioner "file" {
+    source      = "webapp.zip"
+    destination = "/opt/csye6225/webapp.zip"
+  }
+
+  # Ensure the artifact is owned by the csye6225 user
+  provisioner "shell" {
+    inline = [
+      "sudo chown csye6225:csye6225 /opt/csye6225/webapp.zip"
     ]
   }
 }
