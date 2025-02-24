@@ -73,11 +73,6 @@ build {
       "sudo chmod 755 /opt/csye6225/"
     ]
   }
-  # provisioner "shell" {
-  #   inline = [
-  #     "sudo chown ubuntu:ubuntu /opt/csye6225/"
-  #   ]
-  # }
 
   # Copy the application artifact to the AMI
   provisioner "file" {
@@ -98,11 +93,7 @@ build {
 
       # Install Node.js (using NodeSource setup script for the latest LTS version)
       "curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -",
-      "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs",
-
-      # Verify Node.js and npm installation
-      "node -v",
-      "npm -v"
+      "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs"
     ]
   }
 
@@ -115,6 +106,8 @@ build {
   }
   provisioner "shell" {
     inline = [
+      "sudo -u csye6225 mkdir -p /opt/csye6225/.npm",
+      "sudo -u csye6225 npm config set cache /opt/csye6225/.npm",
       "cd /opt/csye6225/",
       "sudo -u csye6225 npm ci"
     ]
