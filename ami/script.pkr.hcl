@@ -73,11 +73,11 @@ build {
       "sudo chmod 755 /opt/csye6225/"
     ]
   }
-  provisioner "shell" {
-    inline = [
-      "sudo chown ubuntu:ubuntu /opt/csye6225/"
-    ]
-  }
+  # provisioner "shell" {
+  #   inline = [
+  #     "sudo chown ubuntu:ubuntu /opt/csye6225/"
+  #   ]
+  # }
 
   # Copy the application artifact to the AMI
   provisioner "file" {
