@@ -64,4 +64,9 @@ jobs:
           PACKER_DB_NAME: ${{ secrets.DB_NAME }}
           PACKER_DB_USER: ${{ secrets.DB_USER }}
           PACKER_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: packer build .
+        run: |
+          packer build \
+            -var "db_name=$PACKER_DB_NAME" \
+            -var "db_user=$PACKER_DB_USER" \
+            -var "db_password=$PACKER_DB_PASSWORD" \
+            script.pkr.hcl
