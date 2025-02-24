@@ -108,7 +108,7 @@ build {
     inline = [
       "cd /opt/csye6225/",
       "sudo npm install",
-      "sudo chown -r -R csye6225:csye6225 node_modules"
+      "sudo chown -R csye6225:csye6225 node_modules"
     ]
   }
   provisioner "shell" {
