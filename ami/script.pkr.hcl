@@ -7,10 +7,17 @@ packer {
   }
 }
 # Define Packer variables
-variable "db_name" {}
-variable "db_user" {}
-variable "db_password" {}
+variable "db_name" {
+  default = ""
+}
 
+variable "db_user" {
+  default = ""
+}
+
+variable "db_password" {
+  default = ""
+}
 source "amazon-ebs" "ubuntu" {
   ami_name      = "packer-linux-aws"
   instance_type = "t2.micro"
