@@ -28,15 +28,15 @@ jobs:
     - name: Build Application Artifact
       run: |
           mkdir -p build
-          zip -r build/webapp.zip ./*
+          zip -r build/webapp.zip ./* .env # Include .env in the zip file
           ls -l build/webapp.zip # Debug: Verify the artifact is created
 
-    - name: Copy Artifact to AMI Directory
+    - name: Copy Artifact and .env to AMI Directory
       run: |
           mkdir -p ami
           cp build/webapp.zip ami/webapp.zip
-          ls -l ami/webapp.zip # Debug: Verify the artifact is copied
-
+          cp .env ami/.env # Copy .env to the ami directory
+          ls -l ami # Debug: Verify the contents of the ami directory
     - name: Run Initialization
       working-directory: ami
       run: packer init .
