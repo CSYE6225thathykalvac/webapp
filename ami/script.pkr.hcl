@@ -104,6 +104,10 @@ build {
       "sudo chown -R csye6225:csye6225 /opt/csye6225/"
     ]
   }
+  provisioner "file" {
+    source      = "webapp.service"
+    destination = "/tmp/webapp.service"
+  }
   provisioner "shell" {
     inline = [
       "cd /opt/csye6225/",
@@ -119,7 +123,10 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/.env /opt/csye6225/.env",
-      "sudo chown csye6225:csye6225 /opt/csye6225/.env"
+      "sudo chown csye6225:csye6225 /opt/csye6225/.env",
+      "sudo mv /tmp/webapp.service /etc/systemd/system/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable webapp.service"
     ]
   }
 
