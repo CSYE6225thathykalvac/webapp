@@ -55,7 +55,7 @@ source "googlecompute" "ubuntu" {
   machine_type     = "e2-micro"
   project_id       = "devcsye6225-452004"
   zone             = "us-central1-a"
-  source_image     = "ubuntu-2204-lts"
+  source_image     = "ubuntu-2204-jammy-v20231030"
   ssh_username     = "ubuntu"
   image_family     = "webapp"
   disk_size        = 25
