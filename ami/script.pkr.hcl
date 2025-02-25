@@ -4,6 +4,10 @@ packer {
       version = ">= 1.1.4"
       source  = "github.com/hashicorp/amazon"
     }
+    googlecompute = {
+      version = ">= 1.0.0"
+      source  = "github.com/hashicorp/googlecompute"
+    }
   }
 }
 # Define Packer variables
@@ -41,10 +45,25 @@ source "amazon-ebs" "ubuntu" {
   }
 }
 
+source "googlecompute" "ubuntu" {
+  image_name       = "packer-linux-gcp"
+  machine_type     = "e2-micro"
+  project_id       = "devcsye6225-452004"
+  zone             = "us-central1-a"
+  source_image     = "ubuntu-2204-lts"
+  ssh_username     = "ubuntu"
+  image_family     = "webapp"
+  disk_size        = 25
+  disk_type        = "pd-ssd"
+  credentials_file = var.account_file
+
+}
+
 build {
   name = "learn-packer"
   sources = [
-    "source.amazon-ebs.ubuntu"
+    "source.amazon-ebs.ubuntu",
+    "source.googlecompute.ubuntu"
   ]
 
   provisioner "shell" {

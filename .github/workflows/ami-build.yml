@@ -21,6 +21,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Configure GCP Credentials
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDS }}
+
+      - name: Setting GCP SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Setting GCP Access Key
+        working-directory: api
+        run: | 
+          echo '${{ secrets.GCP_CREDS }}' >> .gcp-key.json
+
       - name: Install Packer
         uses: hashicorp/setup-packer@main
 
