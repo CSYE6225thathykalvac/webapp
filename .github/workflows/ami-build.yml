@@ -27,7 +27,7 @@ jobs:
       - name: Setting Environment Variables
         run: |
           echo "DATABASE_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DATABASE_USERNAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DATABASE_USERNAME=${{ secrets.DB_USER }}" >> .env
           echo "DATABASE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DATABASE_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "DATABASE_PORT=${{ secrets.DB_PORT }}" >> .env
