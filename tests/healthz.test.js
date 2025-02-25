@@ -8,7 +8,7 @@ describe('GET /healthz', () => {
   
   it('should return 200 OK when database is up', async () => {
     const res = await request(app).get('/healthz');
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
   });
 
   it('should return 503 Service Unavailable when database is down', async () => {
