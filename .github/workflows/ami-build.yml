@@ -34,18 +34,18 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> .env
           cat .env
      
-      - name: Build and Copy Artifact
+      - name: Build Application Artifact
         run: |
-          mkdir -p build ami
-          zip -r build/webapp.zip ./* .env
-          cp build/webapp.zip ami/webapp.zip
-          ls -l ami/webapp.zip
+          mkdir -p build
+          zip -r build/webapp.zip ./* .env # Include .env in the zip file
+          ls -l build/webapp.zip # Debug: Verify the artifact is created
 
-      - name: Copy Artifact to AMI Directory
+      - name: Copy Artifact and .env to AMI Directory
         run: |
           mkdir -p ami
           cp build/webapp.zip ami/webapp.zip
-          ls -l ami/webapp.zip
+          cp .env ami/.env # Copy .env to the ami directory
+          ls -l ami # Debug: Verify the contents of the ami directory
 
       - name: Packer Initialization
         working-directory: ami
