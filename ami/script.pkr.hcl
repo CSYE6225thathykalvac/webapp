@@ -22,6 +22,11 @@ variable "db_user" {
 variable "db_password" {
   default = ""
 }
+
+variable "gcp_password" {
+  default = ".gcp-key.json"
+}
+
 source "amazon-ebs" "ubuntu" {
   ami_name      = "packer-linux-aws"
   instance_type = "t2.micro"
@@ -55,7 +60,7 @@ source "googlecompute" "ubuntu" {
   image_family     = "webapp"
   disk_size        = 25
   disk_type        = "pd-ssd"
-  credentials_file = var.account_file
+  credentials_file = var.gcp_password
 
 }
 
