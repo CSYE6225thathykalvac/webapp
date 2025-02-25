@@ -4,6 +4,10 @@ packer {
       version = ">= 1.1.4"
       source  = "github.com/hashicorp/amazon"
     }
+    googlecompute = {
+      version = ">= 1.0.0"
+      source  = "github.com/hashicorp/googlecompute"
+    }
   }
 }
 # Define Packer variables
@@ -18,6 +22,11 @@ variable "db_user" {
 variable "db_password" {
   default = ""
 }
+
+variable "gcp_password" {
+  default = ".gcp-key.json"
+}
+
 source "amazon-ebs" "ubuntu" {
   ami_name      = "packer-linux-aws"
   instance_type = "t2.micro"
@@ -41,10 +50,25 @@ source "amazon-ebs" "ubuntu" {
   }
 }
 
+source "googlecompute" "ubuntu" {
+  image_name       = "packer-linux-gcp"
+  machine_type     = "e2-micro"
+  project_id       = "devcsye6225-452004"
+  zone             = "us-central1-a"
+  source_image     = "ubuntu-2204-lts"
+  ssh_username     = "ubuntu"
+  image_family     = "webapp"
+  disk_size        = 25
+  disk_type        = "pd-ssd"
+  credentials_file = var.gcp_password
+
+}
+
 build {
   name = "learn-packer"
   sources = [
-    "source.amazon-ebs.ubuntu"
+    "source.amazon-ebs.ubuntu",
+    "source.googlecompute.ubuntu"
   ]
 
   provisioner "shell" {
