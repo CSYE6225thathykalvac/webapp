@@ -113,13 +113,12 @@ build {
   }
   provisioner "file" {
     source      = ".env"
-    destination = "/opt/csye6225/.env"
+    destination = "/tmp/.env"
   }
 
-  # Restore ownership of /opt/csye6225/ to csye6225
   provisioner "shell" {
     inline = [
-      "sudo chown csye6225:csye6225 /opt/csye6225/",
+      "sudo mv /tmp/.env /opt/csye6225/.env",
       "sudo chown csye6225:csye6225 /opt/csye6225/.env"
     ]
   }
