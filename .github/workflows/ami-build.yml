@@ -30,7 +30,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Setting GCP Access Key
-        working-directory: api
+        working-directory: ami
         run: | 
           echo '${{ secrets.GCP_CREDS }}' >> .gcp-key.json
 
