@@ -26,6 +26,10 @@ variable "db_password" {
 variable "gcp_password" {
   default = ".gcp-key.json"
 }
+variable "ami_users" {
+  type = string
+  default = env("AMI_USER")
+}
 
 source "amazon-ebs" "ubuntu" {
   ami_name      = "packer-linux-aws"
@@ -39,7 +43,7 @@ source "amazon-ebs" "ubuntu" {
       virtualization-type = "hvm"
     }
     most_recent = true
-    owners      = ["099720109477"] # Canonical's owner ID for Ubuntu AMIs
+    owners      = ["099720109477"] 
   }
   ssh_username = "ubuntu"
   launch_block_device_mappings {
@@ -48,6 +52,7 @@ source "amazon-ebs" "ubuntu" {
     volume_type           = "gp2"
     delete_on_termination = true
   }
+  ami_users = [var.ami_users]
 }
 
 source "googlecompute" "ubuntu" {

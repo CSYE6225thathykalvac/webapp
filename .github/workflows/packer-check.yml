@@ -63,6 +63,8 @@ jobs:
 
     - name: Run Packer validate
       working-directory: ami
+      env:
+        AMI_USER: ${{ secrets.AWS_DEMO }}
       run: |
         packer validate .
       continue-on-error: false

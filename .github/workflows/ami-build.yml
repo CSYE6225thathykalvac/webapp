@@ -46,7 +46,6 @@ jobs:
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
           cat .env
-     
       - name: Build Application Artifact
         run: |
           mkdir -p build
@@ -68,6 +67,8 @@ jobs:
 
       - name: Validate Packer Template
         working-directory: ami
+        env:
+          AMI_USER: ${{ secrets.AWS_DEMO }}
         run: packer validate .
 
       - name: Build AMI with Packer
@@ -82,3 +83,6 @@ jobs:
             -var "db_user=$PACKER_DB_USER" \
             -var "db_password=$PACKER_DB_PASSWORD" \
             script.pkr.hcl
+
+
+    
