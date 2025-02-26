@@ -74,6 +74,7 @@ jobs:
       - name: Build AMI with Packer
         working-directory: ami 
         env:
+          AMI_USER: ${{ secrets.AWS_DEMO }}
           PACKER_DB_NAME: ${{ secrets.DB_NAME }}
           PACKER_DB_USER: ${{ secrets.DB_USER }}
           PACKER_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
