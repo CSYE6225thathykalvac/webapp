@@ -27,7 +27,7 @@ variable "gcp_password" {
   default = ".gcp-key.json"
 }
 variable "ami_users" {
-  type = string
+  type    = string
   default = env("AMI_USER")
 }
 
@@ -43,7 +43,7 @@ source "amazon-ebs" "ubuntu" {
       virtualization-type = "hvm"
     }
     most_recent = true
-    owners      = ["099720109477"] 
+    owners      = ["099720109477"]
   }
   ssh_username = "ubuntu"
   launch_block_device_mappings {
