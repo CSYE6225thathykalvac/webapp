@@ -15,7 +15,7 @@ variable "db_name" {
   default = ""
 }
 
-variable "db_user" {
+   variable "db_user" {
   default = ""
 }
 
