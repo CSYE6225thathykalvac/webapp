@@ -55,3 +55,11 @@ Responses:
 3. **Install Dependencies**: Runs `npm install` to install project dependencies.
 4. **Wait for MySQL**: Ensures the MySQL service is ready before running tests.
 5. **Run Tests**: Executes Jest tests using the provided database credentials.
+
+# Assignment 04
+
+## coomands to run packer
+- packer fmt .
+- packer init .
+- packer validate .
+- packer build .
