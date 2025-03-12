@@ -10,6 +10,7 @@ packer {
     }
   }
 }
+
 # Define Packer variables
 variable "db_name" {
   default = ""
