@@ -6,7 +6,7 @@ packer {
     }
     googlecompute = {
       version = ">= 1.0.0"
-       source  = "github.com/hashicorp/googlecompute"
+      source  = "github.com/hashicorp/googlecompute"
     }
   }
 }
@@ -26,7 +26,7 @@ variable "db_password" {
 variable "gcp_password" {
   default = ".gcp-key.json"
 }
-variable "ami_users" {
+variable "ami_user" {
   type    = string
   default = env("AMI_USER")
 }
