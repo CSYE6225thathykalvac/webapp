@@ -26,7 +26,7 @@ variable "db_password" {
 variable "gcp_password" {
   default = ".gcp-key.json"
 }
-variable "ami_user" {
+variable "ami_users" {
   type    = string
   default = env("AMI_USER")
 }
