@@ -4,10 +4,10 @@ packer {
       version = ">= 1.1.4"
       source  = "github.com/hashicorp/amazon"
     }
-    googlecompute = {
-      version = ">= 1.0.0"
-      source  = "github.com/hashicorp/googlecompute"
-    }
+    # googlecompute = {
+    #   version = ">= 1.0.0"
+    #   source  = "github.com/hashicorp/googlecompute"
+    # }
   }
 }
 
@@ -24,9 +24,9 @@ variable "db_password" {
   default = ""
 }
 
-variable "gcp_password" {
-  default = ".gcp-key.json"
-}
+# variable "gcp_password" {
+#   default = ".gcp-key.json"
+# }
 variable "ami_users" {
   type    = string
   default = env("AMI_USER")
@@ -56,19 +56,19 @@ source "amazon-ebs" "ubuntu" {
   ami_users = [var.ami_users]
 }
 
-source "googlecompute" "ubuntu" {
-  image_name       = "packer-linux-gcp"
-  machine_type     = "e2-micro"
-  project_id       = "devcsye6225-452004"
-  zone             = "us-central1-a"
-  source_image     = "ubuntu-2204-jammy-v20231030"
-  ssh_username     = "ubuntu"
-  image_family     = "webapp"
-  disk_size        = 25
-  disk_type        = "pd-ssd"
-  credentials_file = var.gcp_password
+# source "googlecompute" "ubuntu" {
+#   image_name       = "packer-linux-gcp"
+#   machine_type     = "e2-micro"
+#   project_id       = "devcsye6225-452004"
+#   zone             = "us-central1-a"
+#   source_image     = "ubuntu-2204-jammy-v20231030"
+#   ssh_username     = "ubuntu"
+#   image_family     = "webapp"
+#   disk_size        = 25
+#   disk_type        = "pd-ssd"
+#   credentials_file = var.gcp_password
 
-}
+# }
 
 build {
   name = "learn-packer"
@@ -81,19 +81,19 @@ build {
     inline = [
       "sudo DEBIAN_FRONTEND=noninteractive apt-get update --fix-missing",
       "sudo apt-get update -y && sudo apt-get upgrade -y || true",
-      "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
-      # Secure MySQL Installation using Packer variables
-      <<-EOF
-      sudo mysql --user=root <<MYSQL_SCRIPT
-      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
-      CREATE DATABASE IF NOT EXISTS ${var.db_name};
-      CREATE USER IF NOT EXISTS '${var.db_user}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
-      GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'localhost';
-      FLUSH PRIVILEGES;
-      MYSQL_SCRIPT
-      EOF
-      ,
-      "sudo systemctl restart mysql",
+      # "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server",
+      # # Secure MySQL Installation using Packer variables
+      # <<-EOF
+      # sudo mysql --user=root <<MYSQL_SCRIPT
+      # ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
+      # CREATE DATABASE IF NOT EXISTS ${var.db_name};
+      # CREATE USER IF NOT EXISTS '${var.db_user}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${var.db_password}';
+      # GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'localhost';
+      # FLUSH PRIVILEGES;
+      # MYSQL_SCRIPT
+      # EOF
+      # ,
+      # "sudo systemctl restart mysql",
       "sudo groupadd csye6225",
       "sudo useradd -r -s /usr/sbin/nologin -g csye6225 csye6225",
 
@@ -145,15 +145,15 @@ build {
       "sudo chown -R csye6225:csye6225 node_modules"
     ]
   }
-  provisioner "file" {
-    source      = ".env"
-    destination = "/tmp/.env"
-  }
+  # provisioner "file" {
+  #   source      = ".env"
+  #   destination = "/tmp/.env"
+  # }
 
   provisioner "shell" {
     inline = [
-      "sudo mv /tmp/.env /opt/csye6225/.env",
-      "sudo chown csye6225:csye6225 /opt/csye6225/.env",
+      # "sudo mv /tmp/.env /opt/csye6225/.env",
+      # "sudo chown csye6225:csye6225 /opt/csye6225/.env",
       "sudo mv /tmp/webapp.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable webapp.service"
