@@ -20,6 +20,6 @@ HealthCheck.init({
   timestamps : false
 });
 
-sequelize.sync({force:true})
+sequelize.sync()
 
 module.exports = HealthCheck;

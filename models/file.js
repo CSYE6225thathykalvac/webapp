@@ -31,6 +31,5 @@ File.init(
         timestamps: false,
     }
 );
-sequelize.sync({force:true})
 
 module.exports = File;

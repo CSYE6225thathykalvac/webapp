@@ -6,7 +6,6 @@ const express = require('express');
 const app = express();
 const HealthCheck = require('./models/healthCheck');
 const sequelize = require('./config/db');
-const sequelize = require('./sequelize');
 const port = process.env.PORT || 8080;
 const port_listen = app.listen(port)
 const s3 = new AWS.S3();
@@ -75,7 +74,7 @@ app.get('/v1/file/:id', async (req, res) => {
       if (!file) {
           return res.status(404).json({ error: 'File not found' });
       }
-      await sequelize.authenticate();
+
       res.status(200).json({
           file_name: file.file_name,
           id: file.id,
