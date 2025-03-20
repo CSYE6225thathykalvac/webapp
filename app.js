@@ -122,6 +122,7 @@ app.delete('/v1/file', (req, res) => {
   res.status(400).json(); // Bad Request
 });
 
+// DELETE /v1/file/:id (with parameters)
 app.delete('/v1/file/:id', async (req, res) => {
   try {
       const file = await File.findByPk(req.params.id);
@@ -129,18 +130,22 @@ app.delete('/v1/file/:id', async (req, res) => {
           return res.status(404).json();
       }
 
+      // Construct the S3 key using the file ID and file name
+      const key = `${file.id}/${file.file_name}`;
+
       // Delete file from S3
       await s3.deleteObject({
           Bucket: process.env.S3_BUCKET_NAME,
-          Key: file.id,
+          Key: key, // Use the correct key
       }).promise();
 
       // Delete file metadata from the database
       await file.destroy();
 
-      res.status(204).send();
+      res.status(204).send(); // No content response for successful deletion
   } catch (error) {
-      res.status(500).json();
+      console.error('Error deleting file:', error);
+      res.status(500).json(); // Internal Server Error
   }
 });
 
