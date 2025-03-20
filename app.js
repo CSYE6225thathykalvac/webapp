@@ -92,7 +92,7 @@ app.post('/v1/file', upload.single('profilePic'), async (req, res) => {
           upload_date: file.upload_date,
       });
   } catch (error) {
-      res.status(500).json();
+      
   }
 });
 
@@ -114,7 +114,7 @@ app.get('/v1/file/:id', async (req, res) => {
           upload_date: file.upload_date,
       });
   } catch (error) {
-      res.status(500).json();
+      
   }
 });
 
@@ -144,8 +144,7 @@ app.delete('/v1/file/:id', async (req, res) => {
 
       res.status(204).send(); // No content response for successful deletion
   } catch (error) {
-      console.error('Error deleting file:', error);
-      res.status(500).json(); // Internal Server Error
+      
   }
 });
 
