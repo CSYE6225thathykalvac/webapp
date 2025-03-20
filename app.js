@@ -28,16 +28,44 @@ app.head('/healthz', (req, res) => {
   res.status(405).json();
 });
 
+app.get('/healthz', async (req, res) => {
+  try {
+      res.set("Pragma", "no-cache");
+    res.set("X-Content-Type-Options", "nosniff");      
+    res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
+  await sequelize.authenticate()
+    await HealthCheck.create({});
+    
+    res.status(200).json();
+  } catch (err) {
+      res.status(503).json();
+  }
+});
+
+app.all('/healthz', (req, res) => { 
+  res.status(405).json();
+});
+
+app.head('/v1/file', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
+// Handle HEAD /v1/file/:id
+app.head('/v1/file/:id', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
 app.post('/v1/file', upload.single('profilePic'), async (req, res) => {
   try {
       if (!req.file) {
-          return res.status(400).json({ error: 'No file uploaded' });
+          return res.status(400).json();
       }
 
       const fileId = uuidv4();
+      const key = `${fileId}/${req.file.originalname}`;
       const params = {
           Bucket: process.env.S3_BUCKET_NAME,
-          Key: fileId,
+          Key: key,
           Body: req.file.buffer,
           ContentType: req.file.mimetype,
           Metadata: {
@@ -49,10 +77,11 @@ app.post('/v1/file', upload.single('profilePic'), async (req, res) => {
       const s3Response = await s3.upload(params).promise();
 
       // Save file metadata to the database
+      const fileUrl = `${process.env.S3_BUCKET_NAME}/${key}`;
       const file = await File.create({
           id: fileId,
           file_name: req.file.originalname,
-          url: s3Response.Location, // S3 object URL
+          url: fileUrl, // S3 object URL
           upload_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
       });
 
@@ -63,16 +92,19 @@ app.post('/v1/file', upload.single('profilePic'), async (req, res) => {
           upload_date: file.upload_date,
       });
   } catch (error) {
-      console.error('Error uploading file:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json();
   }
+});
+
+app.get('/v1/file', (req, res) => {
+  res.status(400).json(); // Bad Request
 });
 
 app.get('/v1/file/:id', async (req, res) => {
   try {
       const file = await File.findByPk(req.params.id);
       if (!file) {
-          return res.status(404).json({ error: 'File not found' });
+          return res.status(404).json();
       }
 
       res.status(200).json({
@@ -82,16 +114,19 @@ app.get('/v1/file/:id', async (req, res) => {
           upload_date: file.upload_date,
       });
   } catch (error) {
-      console.error('Error retrieving file metadata:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json();
   }
+});
+
+app.delete('/v1/file', (req, res) => {
+  res.status(400).json(); // Bad Request
 });
 
 app.delete('/v1/file/:id', async (req, res) => {
   try {
       const file = await File.findByPk(req.params.id);
       if (!file) {
-          return res.status(404).json({ error: 'File not found' });
+          return res.status(404).json();
       }
 
       // Delete file from S3
@@ -105,35 +140,14 @@ app.delete('/v1/file/:id', async (req, res) => {
 
       res.status(204).send();
   } catch (error) {
-      console.error('Error deleting file:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json();
   }
 });
 
-app.get('/healthz', async (req, res) => {
-    try {
-        res.set("Pragma", "no-cache");
-      res.set("X-Content-Type-Options", "nosniff");      
-      res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
-    await sequelize.authenticate()
-      await HealthCheck.create({});
-      
-      res.status(200).json();
-    } catch (err) {
-        res.status(503).json();
-    }
-  });
-
-app.all('/healthz', (req, res) => { 
-    res.status(405).json();
-});
-app.use((req, res) => {
-  res.status(400).json();
-});
 
 app.all('/v1/file', (req, res) => {
-  if (req.method !== 'POST') {
-      res.status(405).json();
+  if (req.method !== 'POST' && req.method !== 'GET' && req.method !== 'DELETE') {
+      res.status(405).json(); // Method Not Allowed
   }
 });
 
@@ -141,6 +155,34 @@ app.all('/v1/file/:id', (req, res) => {
   if (req.method !== 'GET' && req.method !== 'DELETE') {
       res.status(405).json();
   }
+});
+
+app.head('/v1/file/:id', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
+// Handle OPTIONS /v1/file/:id
+app.options('/v1/file/:id', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
+// Handle PATCH /v1/file/:id
+app.patch('/v1/file/:id', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
+// Handle PUT /v1/file/:id
+app.put('/v1/file/:id', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
+// Handle POST /v1/file/:id
+app.post('/v1/file/:id', (req, res) => {
+  res.status(405).json(); // Method Not Allowed
+});
+
+app.use((req, res) => {
+  res.status(400).json(); // Bad Request
 });
 
 module.exports = {app:app, port_listen:port_listen};
