@@ -124,6 +124,7 @@ build {
       # Install Node.js (using NodeSource setup script for the latest LTS version)
       "curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs"
+
     ]
   }
 
@@ -142,7 +143,12 @@ build {
     inline = [
       "cd /opt/csye6225/",
       "sudo npm install",
-      "sudo chown -R csye6225:csye6225 node_modules"
+      "sudo chown -R csye6225:csye6225 node_modules",
+      "wget -O /tmp/amazon-cloudwatch-agent.deb https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
+      "sudo dpkg -i /tmp/amazon-cloudwatch-agent.deb || sudo apt-get -f install -y",
+      "sudo chown -R root:root /opt/amazon-cloudwatch-agent",
+      "sudo systemctl enable amazon-cloudwatch-agent",
+      "sudo systemctl start amazon-cloudwatch-agent"
     ]
   }
   # provisioner "file" {
