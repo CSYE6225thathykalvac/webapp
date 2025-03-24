@@ -141,7 +141,7 @@ build {
   }
   provisioner "file" {
     source      = "cloud-watch.json"
-    destination = "/tmp/cw-config.json"
+    destination = "/tmp/cloud-watch.json"
   }
   provisioner "shell" {
     inline = [
@@ -155,8 +155,8 @@ build {
       "sudo systemctl start amazon-cloudwatch-agent",
       "sudo mkdir -p /opt/csye6225/logs/",
       "sudo chown -R csye6225:csye6225 /opt/csye6225/logs/",
-      "sudo mv /tmp/cw-config.json /opt/cw-config.json",
-      "sudo chown csye6225:csye6225 /opt/cw-config.json"
+      "sudo mv /tmp/cloud-watch.json /opt/cloud-watch.json",
+      "sudo chown csye6225:csye6225 /opt/cloud-watch.json"
     ]
   }
   # provisioner "file" {
