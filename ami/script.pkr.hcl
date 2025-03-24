@@ -139,6 +139,10 @@ build {
     source      = "webapp.service"
     destination = "/tmp/webapp.service"
   }
+  provisioner "file" {
+    source      = "cloud-watch.json"
+    destination = "/tmp/cw-config.json"
+  }
   provisioner "shell" {
     inline = [
       "cd /opt/csye6225/",
@@ -148,7 +152,11 @@ build {
       "sudo dpkg -i /tmp/amazon-cloudwatch-agent.deb || sudo apt-get -f install -y",
       "sudo chown -R root:root /opt/amazon-cloudwatch-agent",
       "sudo systemctl enable amazon-cloudwatch-agent",
-      "sudo systemctl start amazon-cloudwatch-agent"
+      "sudo systemctl start amazon-cloudwatch-agent",
+      "sudo mkdir -p /opt/csye6225/logs/",
+      "sudo chown -R csye6225:csye6225 /opt/csye6225/logs/",
+      "sudo mv /tmp/cw-config.json /opt/cw-config.json",
+      "sudo chown csye6225:csye6225 /opt/cw-config.json"
     ]
   }
   # provisioner "file" {
