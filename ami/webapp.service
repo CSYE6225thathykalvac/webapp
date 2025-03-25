@@ -2,6 +2,7 @@
 Description=CSYE6225 Web Application Service
 After=network.target mysql.service
 Wants=network-online.target
+ConditionalPathExsists=/opt/csye6225/.env
 
 [Service]
 User=csye6225
