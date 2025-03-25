@@ -112,7 +112,7 @@ app.post('/v1/file', upload.single('profilePic'), async (req, res) => {
       });
   } catch (error) {
     logger.error('File upload failed', { error: error.message, stack: error.stack });
-      res.status(503).json();
+      // res.status(503).json();
   }
 });
 
@@ -138,7 +138,8 @@ app.get('/v1/file/:id', async (req, res) => {
       });
   } catch (error) {
     logger.error('File retrival failed', { error: error.message, stack: error.stack });
-      res.status(503).json();}
+      // res.status(503).json();
+    }
 });
 
 app.delete('/v1/file', (req, res) => {
@@ -171,7 +172,7 @@ app.delete('/v1/file/:id', async (req, res) => {
       res.status(204).send(); // No content response for successful deletion
   } catch (error) {
     logger.error('File deletion failed', { error: error.message, stack: error.stack });
-      res.status(503).json();
+      // res.status(503).json();
   }
 });
 
