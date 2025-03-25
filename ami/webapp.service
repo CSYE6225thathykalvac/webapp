@@ -1,6 +1,7 @@
 [Unit]
 Description=CSYE6225 Web Application Service
-After=network.target
+After=network.target mysql.service
+Wants=network-online.target
 
 [Service]
 User=csye6225
