@@ -8,10 +8,10 @@ Group=csye6225
 WorkingDirectory=/opt/csye6225/
 ExecStart=/usr/bin/node /opt/csye6225/app.js
 Restart=always
-RestartSec=5s
+RestartSec=10
 EnvironmentFile=/opt/csye6225/.env
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=append:/opt/csye6225/logs/csye6225.log
+StandardError=append:/opt/csye6225/logs/csye6225.log
 SyslogIdentifier=csye6225-webapp
 
 [Install]
