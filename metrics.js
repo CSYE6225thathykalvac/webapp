@@ -4,7 +4,7 @@ const logger = require('./logger');
 const statsd = new StatsD({
   host: 'localhost',
   port: 8125,
-  prefix: 'webapp.',
+  prefix: 'api.',
   errorHandler: (error) => {
     logger.error('StatsD error:', error);
   }
