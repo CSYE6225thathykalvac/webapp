@@ -1,13 +1,9 @@
-const StatsD = require('hot-shots');
-const logger = require('./logger');
+const StatsD = require('node-statsd');
 
 const statsd = new StatsD({
-  host: 'localhost',
-  port: 8125,
-  prefix: 'api.',
-  errorHandler: (error) => {
-    logger.error('StatsD error:', error);
-  }
+    host: 'localhost',
+    port: 8125,
+    prefix: 'api.'
 });
 
 module.exports = statsd;
