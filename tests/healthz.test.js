@@ -2,6 +2,7 @@ const request = require('supertest');
 const {app} = require('../app'); 
 const sequelize = require('../config/db');
 const {port_listen} = require('../app');
+const statsd = require('../metrics');
 beforeAll(async() => {
   await sequelize.authenticate()})
 describe('GET /healthz', () => {
@@ -71,4 +72,5 @@ describe('GET /healthz', () => {
 afterAll(async () => {
     await sequelize.close();
     port_listen.close()
+    statsd.close()
 });
