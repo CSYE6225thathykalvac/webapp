@@ -9,7 +9,6 @@ jobs:
   build:
     name: Building Machine Image
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,7 +30,7 @@ jobs:
 
       - name: Setting GCP Access Key
         working-directory: ami
-        run: | 
+        run: |
           echo '${{ secrets.GCP_CREDS }}' >> .gcp-key.json
 
       - name: Install Packer
@@ -46,6 +45,7 @@ jobs:
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
           cat .env
+
       - name: Build Application Artifact
         run: |
           mkdir -p build
@@ -61,7 +61,7 @@ jobs:
 
       - name: Packer Initialization
         working-directory: ami
-        run: | 
+        run: |
           ls -l
           packer init .
 
@@ -84,6 +84,7 @@ jobs:
             -var "db_user=$PACKER_DB_USER" \
             -var "db_password=$PACKER_DB_PASSWORD" \
             script.pkr.hcl
+
       - name: Share the AMI and Save AMI_ID
         id: share_ami
         run: |
@@ -132,15 +133,15 @@ jobs:
           echo "ami_id=$AMI_ID" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials for Dev
-        if: ${{ secrets.DEPLOY_ENVIRONMENT_ACCOUNT == 'dev' }}
+        if: ${{ env.DEPLOY_ENVIRONMENT_ACCOUNT == 'dev' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Configure AWS Credentials for Demo
-        if: ${{ secrets.DEPLOY_ENVIRONMENT_ACCOUNT == 'demo' }}
+        if: ${{ env.DEPLOY_ENVIRONMENT_ACCOUNT == 'demo' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
@@ -150,10 +151,10 @@ jobs:
       - name: Create New Launch Template Version
         id: create_lt_version
         run: |
-          AMI_ID=${{ secrets.ami_id }}
+          AMI_ID=${{ env.ami_id }}
           echo "Creating new Launch Template version with AMI ID: $AMI_ID"
           aws ec2 create-launch-template-version \
-              --launch-template-id ${{secrets.LAUNCH_TEMPLATE_ID }} \
+              --launch-template-id ${{ secrets.LAUNCH_TEMPLATE_ID }} \
               --source-version 1 \
               --launch-template-data "{\"ImageId\":\"$AMI_ID\"}" \
               --no-cli-pager
@@ -175,7 +176,7 @@ jobs:
           while true; do
             STATUS=$(aws autoscaling describe-instance-refreshes \
                 --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
-                --query "InstanceRefreshes[?InstanceRefreshId=='${{ secrets.instance_refresh_id }}'].Status" \
+                --query "InstanceRefreshes[?InstanceRefreshId=='${{ env.instance_refresh_id }}'].Status" \
                 --output text \
                 --no-cli-pager)
             echo "Current status: $STATUS"
@@ -188,6 +189,3 @@ jobs:
             fi
             sleep 30
           done
-
-
-    
