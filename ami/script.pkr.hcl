@@ -33,7 +33,7 @@ variable "ami_users" {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "packer-linux-aws-t"
+  ami_name      = "packer-linux-aws-t-{{ formatdate(\"2006-01-02-150405\", timestamp()) }}"
   instance_type = "t2.micro"
   region        = "us-east-1"
   profile       = "github"
