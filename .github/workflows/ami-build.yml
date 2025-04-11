@@ -111,7 +111,7 @@ jobs:
 
   autoscaling_refresh:
     name: Auto Scaling Group Launch Template & Instance Refresh
-    needs: packer-build
+    needs: build
     runs-on: ubuntu-latest
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
