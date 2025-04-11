@@ -148,6 +148,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Debug Launch Template ID
+        run: |
+          if [ -z "${{ secrets.LAUNCH_TEMPLATE_ID }}" ]; then
+            echo "DEBUG: LAUNCH_TEMPLATE_ID is empty!"
+          else
+            echo "DEBUG: LAUNCH_TEMPLATE_ID is set."
+          fi
+
       - name: Create New Launch Template Version
         id: create_lt_version
         run: |
