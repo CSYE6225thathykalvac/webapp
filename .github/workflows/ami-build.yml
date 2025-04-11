@@ -132,28 +132,28 @@ jobs:
           echo "ami_id=$AMI_ID" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials for Dev
-        if: ${{ env.DEPLOY_ENVIRONMENT_ACCOUNT == 'dev' }}
+        if: ${{ secrets.DEPLOY_ENVIRONMENT_ACCOUNT == 'dev' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Configure AWS Credentials for Demo
-        if: ${{ env.DEPLOY_ENVIRONMENT_ACCOUNT == 'demo' }}
+        if: ${{ secrets.DEPLOY_ENVIRONMENT_ACCOUNT == 'demo' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Create New Launch Template Version
         id: create_lt_version
         run: |
-          AMI_ID=${{ env.ami_id }}
+          AMI_ID=${{ secrets.ami_id }}
           echo "Creating new Launch Template version with AMI ID: $AMI_ID"
           aws ec2 create-launch-template-version \
-              --launch-template-id ${{ env.LAUNCH_TEMPLATE_ID }} \
+              --launch-template-id ${{secrets.LAUNCH_TEMPLATE_ID }} \
               --source-version 1 \
               --launch-template-data "{\"ImageId\":\"$AMI_ID\"}" \
               --no-cli-pager
@@ -162,7 +162,7 @@ jobs:
         id: start_refresh
         run: |
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
-              --auto-scaling-group-name ${{ env.AUTO_SCALING_GROUP_NAME }} \
+              --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
               --query "InstanceRefreshId" \
               --output text \
               --no-cli-pager)
@@ -174,8 +174,8 @@ jobs:
           echo "Waiting for instance refresh to complete..."
           while true; do
             STATUS=$(aws autoscaling describe-instance-refreshes \
-                --auto-scaling-group-name ${{ env.AUTO_SCALING_GROUP_NAME }} \
-                --query "InstanceRefreshes[?InstanceRefreshId=='${{ env.instance_refresh_id }}'].Status" \
+                --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
+                --query "InstanceRefreshes[?InstanceRefreshId=='${{ secrets.instance_refresh_id }}'].Status" \
                 --output text \
                 --no-cli-pager)
             echo "Current status: $STATUS"
