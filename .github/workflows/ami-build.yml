@@ -95,7 +95,7 @@ jobs:
           if [ -n "$AMI_ID" ]; then
             echo "Sharing AMI $AMI_ID with DEMO account..."
             aws ec2 modify-image-attribute --image-id "$AMI_ID" \
-              --launch-permission "{\"Add\": [{\"UserId\": \"${{ env.DEMO_USER }}\"}]}"
+              --launch-permission "{\"Add\": [{\"UserId\": \"${{ secrets.DEMO_USER }}\"}]}"
             echo "ami_id=$AMI_ID" >> $GITHUB_OUTPUT
             echo "$AMI_ID" > ami_id.txt
           else
