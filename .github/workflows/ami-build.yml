@@ -187,7 +187,7 @@ jobs:
                 --query "InstanceRefreshes[?InstanceRefreshId=='${{ env.instance_refresh_id }}'].Status" \
                 --output text \
                 --no-cli-pager)
-            echo "Current status: $STATUS"
+            echo "Current status: $STATUS "
             if [[ "$STATUS" == "Successful" ]]; then
               echo "Instance Refresh completed successfully."
               break
