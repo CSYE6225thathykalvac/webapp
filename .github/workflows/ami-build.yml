@@ -148,24 +148,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Debug Launch Template ID
-        run: |
-          if [ -z "${{ secrets.LAUNCH_TEMPLATE_ID }}" ]; then
-            echo "DEBUG: LAUNCH_TEMPLATE_ID is empty!"
-          else
-            echo "DEBUG: LAUNCH_TEMPLATE_ID is set."
-          fi
-
       - name: Create New Launch Template Version
-        id: create_lt_version
+        env:
+          LAUNCH_TEMPLATE_ID: ${{ secrets.LAUNCH_TEMPLATE_ID }}
         run: |
           AMI_ID=${{ env.ami_id }}
-          echo "Creating new Launch Template version with AMI ID: $AMI_ID"
+          echo "Debug: AMI_ID=$AMI_ID"
+          echo "Debug: LAUNCH_TEMPLATE_ID=$LAUNCH_TEMPLATE_ID"
+          
+          if [ -z "$LAUNCH_TEMPLATE_ID" ]; then
+            echo "ERROR: LAUNCH_TEMPLATE_ID is empty!"
+            exit 1
+          fi
+
           aws ec2 create-launch-template-version \
-              --launch-template-id ${{ secrets.LAUNCH_TEMPLATE_ID }} \
+              --launch-template-id "$LAUNCH_TEMPLATE_ID" \
               --source-version 1 \
               --launch-template-data "{\"ImageId\":\"$AMI_ID\"}" \
               --no-cli-pager
+
 
       - name: Start Instance Refresh
         id: start_refresh
