@@ -151,6 +151,7 @@ jobs:
       - name: Create New Launch Template Version
         env:
           LAUNCH_TEMPLATE_ID: ${{ secrets.LAUNCH_TEMPLATE_ID }}
+          AWS_REGION: us-east-1
         run: |
           AMI_ID=${{ env.ami_id }}
           echo "Debug: AMI_ID=$AMI_ID"
@@ -170,6 +171,8 @@ jobs:
 
       - name: Start Instance Refresh
         id: start_refresh
+        env:
+          AWS_REGION: us-east-1
         run: |
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
               --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
@@ -180,6 +183,8 @@ jobs:
           echo "instance_refresh_id=$REFRESH_ID" >> $GITHUB_ENV
 
       - name: Wait for Instance Refresh Completion
+        env:
+            AWS_REGION: us-east-1
         run: |
           echo "Waiting for instance refresh to complete..."
           while true; do
