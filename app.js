@@ -37,6 +37,11 @@ app.use('/healthz', (req, res, next) => {
      })
     next();
 });
+// Add this simple endpoint towards the end of your app.js file
+app.get('/test', (req, res) => {
+  res.status(200).json();
+});
+
 
 app.head('/healthz', (req, res) => {
   logger.warn('HEAD request to /healthz is not allowed');
