@@ -186,14 +186,12 @@ jobs:
           echo "Checking if ASG exists..."
           aws autoscaling describe-auto-scaling-groups \
               --auto-scaling-group-names "$AUTO_SCALING_GROUP_NAME" \
-              --region $AWS_REGION \
               --no-cli-pager
 
           # Start instance refresh
           echo "Starting instance refresh..."
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
               --auto-scaling-group-name "$AUTO_SCALING_GROUP_NAME" \
-              --region $AWS_REGION \
               --query "InstanceRefreshId" \
               --output text \
               --no-cli-pager)
