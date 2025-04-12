@@ -70,51 +70,51 @@ app.all('/healthz', (req, res) => {
   res.status(405).json();
 });
 
-app.use('/cicd', (req, res, next) => {
-  if (Object.keys(req.query).length>0) {
-    logger.warn('Invalid request to /healthz: Query or body parameters provided');
-     return res.status(400).json();
-   }
-   if(Object.keys(req.body).length>0){
-    logger.warn('Invalid request to /healthz: Query or body parameters provided');
-      return res.status(400).json()
-   }
-   req.on("data", function(){
-    logger.warn('Invalid request to /healthz: Body content provided');
-      return res.status(400).json()
-   })
-  next();
-});
+// app.use('/cicd', (req, res, next) => {
+//   if (Object.keys(req.query).length>0) {
+//     logger.warn('Invalid request to /healthz: Query or body parameters provided');
+//      return res.status(400).json();
+//    }
+//    if(Object.keys(req.body).length>0){
+//     logger.warn('Invalid request to /healthz: Query or body parameters provided');
+//       return res.status(400).json()
+//    }
+//    req.on("data", function(){
+//     logger.warn('Invalid request to /healthz: Body content provided');
+//       return res.status(400).json()
+//    })
+//   next();
+// });
 
 
-app.head('/cicd', (req, res) => {
-logger.warn('HEAD request to /healthz is not allowed');
-res.status(405).json();
-});
+// app.head('/cicd', (req, res) => {
+// logger.warn('HEAD request to /healthz is not allowed');
+// res.status(405).json();
+// });
 
-app.get('/cicd', async (req, res) => {
-try {
-  const start = Date.now();
-    res.set("Pragma", "no-cache");
-  res.set("X-Content-Type-Options", "nosniff");      
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
-await sequelize.authenticate()
-  await HealthCheck.create({});
-  logger.info('Health check successful');
-  statsd.increment('api.calls.healthz');
-  const duration = Date.now() - start;
-  statsd.timing('api.response_time.healthz', duration);
-  res.status(200).json();
-} catch (err) {
-  logger.error('Health check failed', { error: err.message, stack: err.stack });
-    res.status(503).json();
-}
-});
+// app.get('/cicd', async (req, res) => {
+// try {
+//   const start = Date.now();
+//     res.set("Pragma", "no-cache");
+//   res.set("X-Content-Type-Options", "nosniff");      
+//   res.set("Cache-Control", "no-cache, no-store, must-revalidate;");
+// await sequelize.authenticate()
+//   await HealthCheck.create({});
+//   logger.info('Health check successful');
+//   statsd.increment('api.calls.healthz');
+//   const duration = Date.now() - start;
+//   statsd.timing('api.response_time.healthz', duration);
+//   res.status(200).json();
+// } catch (err) {
+//   logger.error('Health check failed', { error: err.message, stack: err.stack });
+//     res.status(503).json();
+// }
+// });
 
-app.all('/cicd', (req, res) => { 
-logger.warn(`Invalid method ${req.method} for /healthz`);
-res.status(405).json();
-});
+// app.all('/cicd', (req, res) => { 
+// logger.warn(`Invalid method ${req.method} for /healthz`);
+// res.status(405).json();
+// });
 
 
 app.head('/v1/file', (req, res) => {
