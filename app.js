@@ -70,7 +70,7 @@ app.all('/healthz', (req, res) => {
   res.status(405).json();
 });
 
-app.use('/healthz', (req, res, next) => {
+app.use('/cicd', (req, res, next) => {
   if (Object.keys(req.query).length>0) {
     logger.warn('Invalid request to /healthz: Query or body parameters provided');
      return res.status(400).json();
@@ -85,8 +85,6 @@ app.use('/healthz', (req, res, next) => {
    })
   next();
 });
-// Add this simple endpoint towards the end of your app.js file
-
 
 
 app.head('/cicd', (req, res) => {
