@@ -167,15 +167,20 @@ jobs:
               --source-version 1 \
               --launch-template-data "{\"ImageId\":\"$AMI_ID\"}" \
               --no-cli-pager
-
-
       - name: Start Instance Refresh
         id: start_refresh
         env:
+          AUTO_SCALING_GROUP_NAME: ${{ secrets.AUTO_SCALING_GROUP_NAME }}
           AWS_REGION: us-east-1
         run: |
+          echo "Debug: AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME"
+          if [ -z "$AUTO_SCALING_GROUP_NAME" ]; then
+            echo "ERROR: AUTO_SCALING_GROUP_NAME is empty!"
+            exit 1
+          fi
+
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
-              --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
+              --auto-scaling-group-name "$AUTO_SCALING_GROUP_NAME" \
               --query "InstanceRefreshId" \
               --output text \
               --no-cli-pager)
@@ -184,24 +189,31 @@ jobs:
 
       - name: Wait for Instance Refresh Completion
         env:
-            AWS_REGION: us-east-1
+          AUTO_SCALING_GROUP_NAME: ${{ secrets.AUTO_SCALING_GROUP_NAME }}
+          AWS_REGION: us-east-1
         run: |
+          # Read the instance refresh ID from the environment (set in a previous step)
+          INSTANCE_REFRESH_ID="${{ env.instance_refresh_id }}"
+          echo "Debug: Instance Refresh ID is: '$INSTANCE_REFRESH_ID'"
+          if [ -z "$INSTANCE_REFRESH_ID" ]; then
+            echo "ERROR: Instance Refresh ID is empty!"
+            exit 1
+          fi
+
           echo "Waiting for instance refresh to complete..."
           while true; do
             STATUS=$(aws autoscaling describe-instance-refreshes \
-                --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
-                --query "InstanceRefreshes[?InstanceRefreshId=='${{ env.instance_refresh_id }}'].Status" \
+                --auto-scaling-group-name "$AUTO_SCALING_GROUP_NAME" \
+                --query "InstanceRefreshes[?InstanceRefreshId=='$INSTANCE_REFRESH_ID'].Status" \
                 --output text \
                 --no-cli-pager)
-            echo "Current status: $STATUS  "
-            if [[ "$STATUS" == "Successful" ]]; then
+            echo "Current status: $STATUS"
+            if [ "$STATUS" = "Successful" ]; then
               echo "Instance Refresh completed successfully."
               break
-            elif [[ "$STATUS" == "Failed" || "$STATUS" == "Cancelled" ]]; then
+            elif [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ]; then
               echo "Instance Refresh failed or was cancelled. Exiting."
               exit 1
             fi
             sleep 30
           done
-
-        
