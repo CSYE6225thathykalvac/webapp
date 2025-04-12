@@ -173,20 +173,33 @@ jobs:
           AUTO_SCALING_GROUP_NAME: ${{ secrets.AUTO_SCALING_GROUP_NAME }}
           AWS_REGION: us-east-1
         run: |
+          # Debug: Print ASG name (masked in logs)
           echo "Debug: AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME"
+
+          # Fail if ASG name is empty
           if [ -z "$AUTO_SCALING_GROUP_NAME" ]; then
             echo "ERROR: AUTO_SCALING_GROUP_NAME is empty!"
             exit 1
           fi
 
+          # Verify ASG exists before starting refresh
+          echo "Checking if ASG exists..."
+          aws autoscaling describe-auto-scaling-groups \
+              --auto-scaling-group-names "$AUTO_SCALING_GROUP_NAME" \
+              --region $AWS_REGION \
+              --no-cli-pager
+
+          # Start instance refresh
+          echo "Starting instance refresh..."
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
               --auto-scaling-group-name "$AUTO_SCALING_GROUP_NAME" \
+              --region $AWS_REGION \
               --query "InstanceRefreshId" \
               --output text \
               --no-cli-pager)
+
           echo "Instance Refresh started with ID: $REFRESH_ID"
           echo "instance_refresh_id=$REFRESH_ID" >> $GITHUB_ENV
-
       - name: Wait for Instance Refresh Completion
         env:
           AUTO_SCALING_GROUP_NAME: ${{ secrets.AUTO_SCALING_GROUP_NAME }}
